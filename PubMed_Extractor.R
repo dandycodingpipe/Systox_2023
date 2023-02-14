@@ -31,5 +31,5 @@ Abstract_Extractor <- function(Query_String) {
   
   #HTML Formatting (reference)
   #final_df[,c("pmid", "year", "abstract")] %>% kable() %>% kable_styling(bootstrap_options = 'striped')
-  return(final_df[,c('pmid','year', 'abstract')])
+  return(final_df)
 }
