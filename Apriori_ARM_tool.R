@@ -13,10 +13,10 @@ inspect(trans)
 # 2 {meat,milk,peas}         B456 
 
 t.start <- Sys.time()
-rules <- apriori(trans, parameter = list(supp = 0.001, conf =.05, target = 'rules'))
+rules <- apriori(trans, parameter = list(supp = 0.1, conf =.3, target = 'rules'))
 t.end <- Sys.time()
 print(t.end - t.start)
 
-inspect(sort(rules, by = "lift")[1:10])
+inspect(sort(rules, by = "lift")[100:200])
 
 

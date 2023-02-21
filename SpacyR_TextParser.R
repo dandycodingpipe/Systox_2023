@@ -4,7 +4,7 @@
 
 source("PubMed_Extractor.R")
 
-my_query <- 'BPA and Derivatives AND "2013"[PDAT]:"2023"[PDAT]'
+my_query <- 'periodization training AND "2000"[PDAT]:"2023"[PDAT]'
 
 t.start <- Sys.time()
 raw_pubmed_df <- Abstract_Extractor(my_query)
@@ -21,20 +21,31 @@ papers_3 <- spacy_parse(raw_pubmed_df$abstract)
 #spacy_install(conda = 'auto' , version = 'latest', lang_models = 'en-core_web_sm', python_version = '3.6')
 #DISCLAIMER: Before you can initialize Spacy in R, you must have spacy installed for Python in your computer
 #I did it through conda
+papers_3
+
+#removing some keywords that bloat my output!
+STUDY <- which(papers_3$lemma == "study")
+EFFECT <- which(papers_3$lemma == "effect")
+CHEMICAL <- which(papers_3$lemma == "chemical")
+REMOVE <- c(STUDY,EFFECT, CHEMICAL)
+papers_3 <- papers_3[-REMOVE,]
+which(papers_3$lemma == "study") #should be 0
+
+#i want to focus on nouns, verbs, and adjectives!
 
 NOUN_POS <- which(papers_3$pos == "NOUN")
 VERB_POS <- which(papers_3$pos == "VERB")
 ADJ_POS <- which(papers_3$pos == "ADJ")
-STUDY <- which(papers_3$lemma == "study")
-EFFECT <- which(papers_3$lemma == "effect")
-REMOVE <- c(STUDY,EFFECT)
-master_pos <- c(NOUN_POS,VERB_POS,ADJ_POS)
-master_pos <- master_pos[-REMOVE]
 
-papers_3 = papers_3[master_pos,]
+master_pos <- c(NOUN_POS,VERB_POS,ADJ_POS)
+papers_3 <- papers_3[master_pos,]
+
+which(papers_3$lemma == "study")
 
 papers_3
 write.csv(papers_3, file = "data.csv")
+
+spacy_finalize()
 
 
 
