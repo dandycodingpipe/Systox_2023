@@ -1,4 +1,6 @@
 library(arules)
+library(rJava)
+library(rCBA)
 data <- data.frame(read.csv("data.csv"))
 
 trans <- transactions(data$lemma)
@@ -12,10 +14,7 @@ inspect(trans)
 # 1 {bread,butter,eggs,milk} A123         
 # 2 {meat,milk,peas}         B456 
 
-t.start <- Sys.time()
-rules <- apriori(trans, parameter = list(supp = 0.1, conf =.3, target = 'rules'))
-t.end <- Sys.time()
-print(t.end - t.start)
+1
 
 inspect(sort(rules, by = "lift")[100:200])
 
