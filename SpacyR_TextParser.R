@@ -4,7 +4,7 @@
 
 source("PubMed_Extractor.R")
 
-my_query <- 'periodization training AND "2000"[PDAT]:"2023"[PDAT]'
+my_query <- 'ischemia AND "2000"[PDAT]:"2023"[PDAT]'
 
 t.start <- Sys.time()
 raw_pubmed_df <- Abstract_Extractor(my_query)
@@ -21,7 +21,7 @@ papers_3 <- spacy_parse(raw_pubmed_df$abstract)
 #spacy_install(conda = 'auto' , version = 'latest', lang_models = 'en-core_web_sm', python_version = '3.6')
 #DISCLAIMER: Before you can initialize Spacy in R, you must have spacy installed for Python in your computer
 #I did it through conda
-papers_3
+head(papers_3)
 
 #removing some keywords that bloat my output!
 STUDY <- which(papers_3$lemma == "study")
