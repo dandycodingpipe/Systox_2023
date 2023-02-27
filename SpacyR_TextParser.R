@@ -4,7 +4,7 @@
 
 source("PubMed_Extractor.R")
 
-my_query <- 'saturated fats and heart disease AND "2000"[PDAT]:"2023"[PDAT]'
+my_query <- 'complement system activation or complement system pathologies AND "2000"[PDAT]:"2023"[PDAT]'
 
 t.start <- Sys.time()
 raw_pubmed_df <- Abstract_Extractor(my_query)
@@ -23,11 +23,14 @@ papers_3 <- spacy_parse(raw_pubmed_df$abstract)
 #I did it through conda
 head(papers_3)
 
+#this is where a word frequenct counter is necessary
 #removing some keywords that bloat my output!
 STUDY <- which(papers_3$lemma == "study")
 EFFECT <- which(papers_3$lemma == "effect")
 CHEMICAL <- which(papers_3$lemma == "chemical")
-REMOVE <- c(STUDY,EFFECT, CHEMICAL)
+STOP <- which(papers_3$lemma == "-")
+STOP2 <- which(papers_3$lemma == "%")
+REMOVE <- c(STUDY,EFFECT, CHEMICAL, STOP, STOP2)
 papers_3 <- papers_3[-REMOVE,]
 which(papers_3$lemma == "study") #should be 0
 
@@ -41,6 +44,11 @@ master_pos <- c(NOUN_POS,VERB_POS,ADJ_POS)
 papers_3 <- papers_3[master_pos,]
 
 which(papers_3$lemma == "study")
+
+frequency_dataframe1 = papers_3 %>% count(lemma) %>% arrange(desc(n))
+
+short_dataframe1 = head(frequency_dataframe1, 20)
+ggplot(short_dataframe1, aes(x = lemma, y = n, fill = lemma)) + geom_col() 
 
 papers_3
 write.csv(papers_3, file = "data.csv")
