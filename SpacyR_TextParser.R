@@ -4,7 +4,7 @@
 
 source("PubMed_Extractor.R")
 
-my_query <- 'ischemia AND "2000"[PDAT]:"2023"[PDAT]'
+my_query <- 'saturated fats and heart disease AND "2000"[PDAT]:"2023"[PDAT]'
 
 t.start <- Sys.time()
 raw_pubmed_df <- Abstract_Extractor(my_query)
