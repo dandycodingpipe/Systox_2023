@@ -1,35 +1,32 @@
-#This script creates a function that returns a data frame of extractable information from a publication
-
+#dependencies
 library(easyPubMed)
 library(dplyr)
 library(kableExtra)
 
-#important packages for the organization
-
-
-#my_query <- 'Bladder[TIAB] AND Northwestern[AD] AND Chicago[AD] AND "2013"[PDAT]:"2023"[PDAT]'
-#my_query <- get_pubmed_ids(my_query)
-
-Abstract_Extractor <- function(Query_String) {
-  
-  #1) PMID Retrieval of Query
-  query <- Query_String
-  my_query <- get_pubmed_ids(my_query)
-  
-  #2) XML Retrieval
-  my_abstracts_xml <- fetch_pubmed_data(my_query)
-  all_xml <- articles_to_list(my_abstracts_xml)
-  
-  #3) XML Conversion to data frame with computation time
+#function
+Abstract_Extractor <- function(Query_String, Sample_Thresh) {
   
   t.start <- Sys.time()
   
-  final_df <- do.call(rbind, lapply(all_xml, article_to_df,max_chars = -1, getAuthors = FALSE))
+  #1) PMID retrieval from query
+  query <- Query_String
+  my_query <- get_pubmed_ids(query)
+  print(paste(my_query$Count, "PMIDs retrieved..."))
   
+  #2) XML Retrieval
+  sample_max <- Sample_Thresh
+  my_abstracts_xml <- fetch_pubmed_data(my_query, retmax = sample_max)
+  all_xml <- articles_to_list(my_abstracts_xml)
+  print(paste(length(all_xml), "abstracts were retrieved..."))
+  
+  #3) XML Conversion to data frame
+  final_df <- do.call(rbind, lapply(all_xml, article_to_df,max_chars = -1, getAuthors = FALSE))
+  print("Extraction Complete!")
   t.end <- Sys.time()
   print(t.end - t.start)
   
-  #HTML Formatting (reference)
-  #final_df[,c("pmid", "year", "abstract")] %>% kable() %>% kable_styling(bootstrap_options = 'striped')
   return(final_df)
 }
+
+#HTML Formatting (reference)
+#final_df[,c("pmid", "year", "abstract")] %>% kable() %>% kable_styling(bootstrap_options = 'striped')

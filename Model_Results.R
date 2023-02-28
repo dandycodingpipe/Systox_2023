@@ -1,18 +1,39 @@
-#results
+library(ggplot2)
+library(dplyr)
+#1) extractor PMID data
 
-y <- c(0.05,0.005, 0.0005, 0.00005)
-
-
-tokens_lift2 <- c(0.895,0.894, 0.8955, 0.915)
-assns_lift2 <- c(0.286, 0.311, 0.592, 0.719)
-
-tokens_lift10 <- c(0.915836392,0.915836392,0.915836392, 0.915967488)
-assns_lift10 <- c(0.976754318,0.917535263,0.815477973,0.769899621)
-
-plot(tokens_lift2, y,  col = 'black', xlim = c(0.89,1))
-
-points(tokens_lift10, y, col = 'blue')
+Queries = c('complement system', '(complement system AND immunology) AND humans', 
+            '((complement system OR complement cascade) AND (immunology OR immune system)) AND humans',
+            'complement system AND (pathology OR pathologies)')
+Query = c("Unspecific", "Very Broad", "Broad", "Specific")
 
 
-plot(assns_lift2, y, xlim = c(0.25,1), col= "blue")
-points(assns_lift10,y, col = "red")
+PMIDs = c(74639, 23232,37420,10496)
+
+df_extractor <- data.frame(Queries,PMIDs)
+df_extractor <- df_extractor %>% arrange(-PMIDs)
+df_extractor$Queries <- factor(df_extractor$Queries, levels = c('complement system',
+    '((complement system OR complement cascade) AND (immunology OR immune system)) AND humans',
+    '(complement system AND immunology) AND humans','complement system AND (pathology OR pathologies)'))
+
+ggplot(df_extractor, aes(x = reorder(Query, PMIDs, decreasing = TRUE) , y = PMIDs, fill = Queries)) + geom_col() +
+  labs(x = "Query Specificity", y = "PMIDs Retrieved")
+
+#initial parameters: min supp (0.01), min conf (0.5)
+
+#lemma selected: NOUNS, ADJECTIVES, VERBS
+
+#pvalue calculation method: Fisher's Exact Test
+#pvalue adjustment: benjamini-hochberg FDR
+
+#pvalue effect on association rule filtering
+
+pvalues <- c(0.05,0.005, 0.0005, 0.00005)
+
+lift2 <- c(3348423,911095,236973,63211)
+lift10 <- c(109110,109110,107218,51921)
+
+plot(log10(lift2), pvalues, type = "l", col = "blue", xlab = "# of Associations 10^x")
+points(log10(lift10), pvalues, type = "l", col = "red")
+legend(1,95,legend = c("lift = 2", "lift = 10"), col = c("blue", "red"))
+
