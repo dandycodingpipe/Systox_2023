@@ -5,7 +5,7 @@ library(dplyr)
 Queries = c('complement system', '(complement system AND immunology) AND humans', 
             '((complement system OR complement cascade) AND (immunology OR immune system)) AND humans',
             'complement system AND (pathology OR pathologies)')
-Query = c("Unspecific", "Very Broad", "Broad", "Specific")
+Query = c("Broadest", "Very Broad", "Broad", "Specific")
 
 
 PMIDs = c(74639, 23232,37420,10496)
@@ -17,7 +17,7 @@ df_extractor$Queries <- factor(df_extractor$Queries, levels = c('complement syst
     '(complement system AND immunology) AND humans','complement system AND (pathology OR pathologies)'))
 
 ggplot(df_extractor, aes(x = reorder(Query, PMIDs, decreasing = TRUE) , y = PMIDs, fill = Queries)) + geom_col() +
-  labs(x = "Query Specificity", y = "PMIDs Retrieved")
+  labs(x = "Query Specificity", y = "PMIDs Retrieved") + ggtitle("Query Specifity Effects on PubMed PMID Retrieval")
 
 #initial parameters: min supp (0.01), min conf (0.5)
 

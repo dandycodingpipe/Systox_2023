@@ -11,13 +11,13 @@ Abstract_Extractor <- function(Query_String, Sample_Thresh) {
   #1) PMID retrieval from query
   query <- Query_String
   my_query <- get_pubmed_ids(query)
-  print(paste(my_query$Count, "PMIDs retrieved..."))
+  print(paste(my_query$Count, "PMIDs retrieved. Fetching article information..."))
   
-  #2) XML Retrieval
+  #2) XML Retrieval and Reorganizing
   sample_max <- Sample_Thresh
   my_abstracts_xml <- fetch_pubmed_data(my_query, retmax = sample_max)
   all_xml <- articles_to_list(my_abstracts_xml)
-  print(paste(length(all_xml), "abstracts were retrieved..."))
+  print(paste(length(all_xml), "abstracts were retrieved. Creating output dataframe... (this may take a while)"))
   
   #3) XML Conversion to data frame
   final_df <- do.call(rbind, lapply(all_xml, article_to_df,max_chars = -1, getAuthors = FALSE))
