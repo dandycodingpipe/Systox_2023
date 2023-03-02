@@ -9,13 +9,12 @@ Abstract_Trimmer <- function(raw_data, fraction){
 
   NAs <- which(is.na(raw_data$abstract))
   raw_data <- raw_data[-NAs,]
-  print(which(is.na(raw_data$abstract)))
+
   for(i in 1:length(raw_data$abstract)){
       
-      total <- nchar(raw_data$abstract)
+      total <- nchar(raw_data$abstract[i])
       new_length <- total - round((fraction*total), digits = 0)
       new_length <- as.integer(new_length)
-      print(new_length)
   
       raw_data$abstract[i] <- str_trunc(raw_data$abstract[i], new_length, 'left')
   }

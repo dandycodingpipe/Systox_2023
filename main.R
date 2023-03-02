@@ -3,8 +3,31 @@ library(tidyverse)
 library(tidytext)
 library(tm)
 
-data_post <- data.frame(read.csv("sig_rules.csv"))
+source("Abstract_Extractor.R") 
+source("Text_Parser.R")
+source("Rule_Miner.R")
 
+# Step 1: Corpus Retrieval and Extraction
+myQuery <- "((complement system pathway) OR (complement system proteins)) AND (pathology OR pathologies)"
+
+raw_pub_info <- Abstract_Extractor(myQuery,500)
+
+#Step 2: Natural Language Processing
+parsed_abstracts <- Text_Parser(raw_pub_info, venv_path = "C:\\Users\\Chris\\.virtualenvs\\Python-FsgYzr6a", 
+            lang_model = "en_core_web_sm", 0.2)
+
+#Step 3: Mining Association Rules (this includes statistical filtering)
+rules <- ARM(parsed_abstracts$lemma, min_supp = 0.01, min_conf = 0.8, min_p = 0.05)
+
+df_rules <- DATAFRAME(rules)
+filt_rules <- which(df_rules$lift <= 2)
+df_rules <- df_rules[-filt_rules,]
+write.csv(df_rules, file = "sig_rules.csv")
+
+#removing significant rules that do not meet the lift requirements
+
+wordsearch <- df_rules[which(df_rules$RHS == "{protein}"),]
+freq = df_rules %>% count(RHS) %>% arrange(desc(n))
 frequency_dataframe2 = data_post %>% count(RHS) %>% arrange(desc(n))
 short_dataframe2 = head(frequency_dataframe2, 20)
 
@@ -16,14 +39,5 @@ for(i in 1:7){
   data_post <- data_post[-which(data_post$RHS == removal_words[i]),]
 }
 
-#i should make a function that receives a list of strings "{}" in proper RHS format that removes them and returns
-#the number of RHS arguments removed. it can streamline the post processing.
 
-#at least i know that all of these rules meet criteria of significance (p <= 1E-4)
-data_post <- data_post[-which(data_post$RHS == "{chinese}"),]
-data_post <- data_post[-which(data_post$RHS == "{ingredient}"),]
-data_post <- data_post[-which(data_post$RHS == "{docking}"),]
-data_post <- data_post[-which(data_post$RHS == "{construct}"),]
-data_post <- data_post[-which(data_post$RHS == "{screen}"),]
 
-data_post[which(data_post$RHS == "{core}"),]
