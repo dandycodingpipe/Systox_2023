@@ -11,7 +11,7 @@ source("SpacyR_TextParser.R")
 source("Apriori_ARM_tool.R")
 
 # Step 1: Corpus Retrieval and Extraction
-myQuery <- "((complement system pathway) OR (complement system proteins)) AND (pathology OR pathologies) AND 1980:2010[dp]"
+myQuery <- "((complement system pathway) OR (complement system proteins)) AND (pathology OR pathologies) AND 1980:2023[dp]"
 
 raw_pub_info <- Abstract_Extractor(myQuery,1500)
 
@@ -20,9 +20,7 @@ parsed_abstracts <- Text_Parser(raw_pub_info, venv_path = "C:\\Users\\Chris\\.vi
             lang_model = "en_core_web_sm", 0.2)
 
 #Step 3: Mining Association Rules (this includes statistical filtering)
-rules <- ARM(parsed_abstracts, min_supp = 0.01, min_conf = 0.8, min_p = 0.05)
-
-
+rules <- ARM(parsed_abstracts, min_supp = 0.01, min_conf = 0.5, min_p = 0.005)
 
 filt_rules <- which(rules$lift <= 2)
 rules <- rules[-filt_rules,]
@@ -31,7 +29,8 @@ write.csv(df_rules, file = "sig_rules.csv")
 
 plot(rules, method = 'graph', measure = 'lift', shading = 'coverage')
 
-wordsearch <- rules[which(rules$RHS == "{c4d+}"),]
+wordsearch <- rules[which(rules$RHS == "{glomerulonephritis}"),]
+
 
 freq = rules %>% count(RHS) %>% arrange(desc(n))
 short_dataframe2 = head(freq, 20)
@@ -44,5 +43,6 @@ for(i in 1:7){
   data_post <- data_post[-which(data_post$RHS == removal_words[i]),]
 }
 
-
-
+interesting_rules <- c(783949,1242305,242779,2925,1268339,1448828,2933776,1448844)
+rules[interesting_rules,]
+rules[783949,]
