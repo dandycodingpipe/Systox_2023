@@ -12,6 +12,15 @@ Abstract_Trimmer <- function(raw_data, fraction){
 
   for(i in 1:length(raw_data$abstract)){
       
+      #stop word removal
+      raw_data$abstract #extract noun phrases and ID them
+      for #each individual noun phrase check if there is a stop word
+          #if this doesnt work you're going to have to do period to period scan
+      if #stop word in id i remove noun phrase
+      
+      #reconstruct lemma string with stop words removed
+
+      #reduced search
       total <- nchar(raw_data$abstract[i])
       new_length <- total - round((fraction*total), digits = 0)
       new_length <- as.integer(new_length)
