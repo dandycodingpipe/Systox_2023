@@ -38,7 +38,7 @@ Text_Parser <- function(data, venv_path, lang_model, reduced_search){
   #spacy environment creation and text parsing
   spacy_initialize(model = lang_model, virtualenv = venv_path )
   print("spaCy initialized. Parsing the abstracts...")
-  parsed_text <- spacy_parse(data$abstract)
+  parsed_text <- spacy_parse(data$abstract,additional_attributes = c("sentiment"))
   print(paste(length(parsed_text$lemma),"lemma found in the corpus. Filtering Parts-of-Speech..."))
   
   
