@@ -10,12 +10,17 @@ Abstract_Extractor <- function(Query_String, Sample_Thresh) {
   
   #1) PMID retrieval from query
   query <- Query_String
+  #troubleshooting query <- "((complement system pathway) OR (complement system proteins)) AND (pathology OR pathologies) AND 1980:2023[dp]"
   my_query <- get_pubmed_ids(query)
   print(paste(my_query$Count, "PMIDs retrieved. Fetching article information..."))
   
   #2) XML Retrieval and Reorganizing
   sample_max <- Sample_Thresh
-  my_abstracts_xml <- fetch_pubmed_data(my_query, retmax = sample_max)
+  sample_max = as.integer(1500)
+  
+  #there is a bug with retmax = sample_max so for the time being i am letting easyPubMed auto-retmax.
+  #unfortunately that limits my sample size to 500 articles but there can be workarounds
+  my_abstracts_xml <- fetch_pubmed_data(my_query)
   all_xml <- articles_to_list(my_abstracts_xml)
   print(paste(length(all_xml), "abstracts were retrieved. Creating output dataframe... (this may take a while)"))
   

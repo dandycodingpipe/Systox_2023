@@ -9,16 +9,15 @@ Abstract_Trimmer <- function(raw_data, fraction){
 
   NAs <- which(is.na(raw_data$abstract))
   raw_data <- raw_data[-NAs,]
-
-  for(i in 1:length(raw_data$abstract)){
       
+  for(i in 1:length(raw_data$abstract)){
+      #reduced search
       total <- nchar(raw_data$abstract[i])
       new_length <- total - round((fraction*total), digits = 0)
       new_length <- as.integer(new_length)
   
       raw_data$abstract[i] <- str_trunc(raw_data$abstract[i], new_length, 'left')
   }
-  
   return(raw_data)
 }
 
@@ -29,7 +28,7 @@ Text_Parser <- function(data, venv_path, lang_model, reduced_search){
   #spacy environment creation and text parsing
   spacy_initialize(model = lang_model, virtualenv = venv_path )
   print("spaCy initialized. Parsing the abstracts...")
-  parsed_text <- spacy_parse(data$abstract)
+  parsed_text <- spacy_parse(data$abstract,additional_attributes = c("sentiment"))
   print(paste(length(parsed_text$lemma),"lemma found in the corpus. Filtering Parts-of-Speech..."))
   
   
