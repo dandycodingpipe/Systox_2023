@@ -11,9 +11,12 @@ source("SpacyR_TextParser.R")
 source("Apriori_ARM_tool.R")
 
 # Step 1: Corpus Retrieval and Extraction
-myQuery <- "((complement system pathway) OR (complement system proteins)) AND (pathology OR pathologies) AND 1980:2023[dp]"
+#myQuery <- "((complement system pathway) OR (complement system proteins)) AND (pathology OR pathologies) AND 1980:2023[dp]"
 
-raw_pub_info <- Abstract_Extractor(myQuery,1500)
+#synthetic biological intelligence
+#e3e
+AdriensQuery <- "synthetic biological intelligence"
+raw_pub_info <- Abstract_Extractor(AdriensQuery,1500)
 
 #Step 2: Natural Language Processing
 parsed_abstracts <- Text_Parser(raw_pub_info, venv_path = "C:\\Users\\Chris\\.virtualenvs\\Python-FsgYzr6a", 
@@ -27,15 +30,17 @@ rules <- rules[-filt_rules,]
 write.csv(df_rules, file = "sig_rules.csv")
 
 
-plot(rules, method = 'graph', measure = 'lift', shading = 'coverage')
+plot(freq, method = 'graph', measure = 'n', shading = 'n')
 
-wordsearch <- rules[which(rules$RHS == "{glomerulonephritis}"),]
+wordsearch <- rules[which(rules$RHS == "{datum}"),]
 
 
 freq = rules %>% count(RHS) %>% arrange(desc(n))
 short_dataframe2 = head(freq, 20)
 
 ggplot(short_dataframe2, aes(x = RHS, y = n, fill = RHS)) + geom_col() 
+
+ggplot(freq[2:11,] ,aes(x = RHS, y = n, fill = RHS)) + geom_col()
 
 removal_words <- short_dataframe2$RHS[1:7]
 
