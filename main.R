@@ -12,11 +12,10 @@ source("Apriori_ARM_tool.R")
 
 # Step 1: Corpus Retrieval and Extraction
 #myQuery <- "((complement system pathway) OR (complement system proteins)) AND (pathology OR pathologies) AND 1980:2023[dp]"
+#AdriensQuery <- "synthetic biological intelligence"
 
-#synthetic biological intelligence
-#e3e
-AdriensQuery <- "synthetic biological intelligence"
-raw_pub_info <- Abstract_Extractor(AdriensQuery,1500)
+myQuery <- "(PFAS toxicity OR PFAS toxicology) AND (disease OR pathology OR pathologies)"
+raw_pub_info <- Abstract_Extractor(myQuery,1500)
 
 #Step 2: Natural Language Processing
 parsed_abstracts <- Text_Parser(raw_pub_info, venv_path = "C:\\Users\\Chris\\.virtualenvs\\Python-FsgYzr6a", 

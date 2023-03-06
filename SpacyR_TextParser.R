@@ -3,6 +3,9 @@
 # Part I) publication information retrieval
 
 library(spacyr)
+library(tidytext)
+library(tidyverse)
+
 
 Abstract_Trimmer <- function(raw_data, fraction){
   
@@ -28,7 +31,11 @@ Text_Parser <- function(data, venv_path, lang_model, reduced_search){
   #spacy environment creation and text parsing
   spacy_initialize(model = lang_model, virtualenv = venv_path )
   print("spaCy initialized. Parsing the abstracts...")
-  parsed_text <- spacy_parse(data$abstract,additional_attributes = c("sentiment"))
+  parsed_text <- spacy_parse(data$abstract, dependency = TRUE)
+  
+  parsed_abstracts <- spacy_parse(raw_pub_info$abstract, additional_attributes = c("sentiment"))
+  get_sentiments("afinn")
+  
   print(paste(length(parsed_text$lemma),"lemma found in the corpus. Filtering Parts-of-Speech..."))
   
   
