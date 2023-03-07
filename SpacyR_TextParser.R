@@ -7,6 +7,7 @@ library(tidytext)
 library(tidyverse)
 
 
+
 Abstract_Trimmer <- function(raw_data, fraction){
   
 
@@ -25,36 +26,42 @@ Abstract_Trimmer <- function(raw_data, fraction){
 }
 
 Text_Parser <- function(data, venv_path, lang_model, reduced_search){
+      
+      #abstract search reduction
+      Abstract_Trimmer(data, reduced_search)
+      print(paste("1) search Reduction. removing",reduced_search*100,"% of abstract head..."))
+      
+      #spacy environment creation and text parsing
+      spacy_initialize(model = lang_model, virtualenv = venv_path )
+      print("2) spaCy initialized! parsing the abstracts...")
+      parsed_text <- spacy_parse(data$abstract, dependency = TRUE)
   
-  #abstract reduced search
-  Abstract_Trimmer(data, reduced_search)
-  #spacy environment creation and text parsing
-  spacy_initialize(model = lang_model, virtualenv = venv_path )
-  print("spaCy initialized. Parsing the abstracts...")
-  parsed_text <- spacy_parse(data$abstract, dependency = TRUE)
+      #negation modifier filtering
+      source('NLP_negation_study.R')
+      parsed_text <- rm_negation(parsed_text)
+      print('3) Sentences containing negation modifiers removed...')
   
-  parsed_abstracts <- spacy_parse(raw_pub_info$abstract, additional_attributes = c("sentiment"))
-  get_sentiments("afinn")
-  
-  print(paste(length(parsed_text$lemma),"lemma found in the corpus. Filtering Parts-of-Speech..."))
+      print('4) Filtering Parts-of-Speech...')
   
   
-  #POS filtering and data cleaning
-  NOUN_POS <- which(parsed_text$pos == "NOUN")
-  VERB_POS <- which(parsed_text$pos == "VERB")
-  ADJ_POS <- which(parsed_text$pos == "ADJ")
+      #POS filtering and data cleaning
+      NOUN_POS <- which(parsed_text$pos == "NOUN")
+      VERB_POS <- which(parsed_text$pos == "VERB")
+      ADJ_POS <- which(parsed_text$pos == "ADJ")
   
-  MASTER_POS <- c(NOUN_POS,VERB_POS,ADJ_POS)
-  parsed_text <- parsed_text[MASTER_POS,]
-  print(paste("Filtered ",length(parsed_text$lemma),"potentially relevant lemma. Generating lemma frequency graph..."))
+      MASTER_POS <- c(NOUN_POS,VERB_POS,ADJ_POS)
+      parsed_text <- parsed_text[MASTER_POS,]
+      print(paste("filtered ",length(parsed_text$lemma),"potentially relevant lemma."))
   
+      #dont really know what im doing with this
+      
   #item frequency pre-ARM
   word_frequency <- parsed_text %>% count(lemma) %>%arrange(desc(n))
   top20words <- head(word_frequency,20)
   ggplot(top20words, aes(x = lemma, y = n, fill = lemma)) + geom_col() + ggtitle("Top 20 Words in Query")
   #for some reason this is not working
   spacy_finalize()
-  print('Text parsing complete!')
+  print('natural language processing complete!')
   
   return(parsed_text)
 }

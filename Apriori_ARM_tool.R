@@ -4,7 +4,7 @@ library(arules)
 ARM <- function(data, min_supp, min_conf, min_p ){
   
   #rule generation
-  print("Converting rules into item/transaction format...")
+  print("Converting pasrsed abstracts into item/transaction format...")
   txns <- as(split(data$lemma, data$doc_id), "transactions")
   
   print("Initiating apriori algorithm...")

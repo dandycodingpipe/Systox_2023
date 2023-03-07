@@ -1,15 +1,14 @@
 #Natural Language Processing Study 1 (Negation modifier removal)
 
-#this document is its own standalone MWE
-
 #Dependencies: tidyverse, textdata, spacyr, dplyr, quanteda 
 
-# pip install was used in both systems
-#homebrew was used to install virtualenv (mac)
+#Command Line Interface Instructions:
+
+# pip and virtualenv are recommended packages
 
 #I) python virtual environment creation
     
-      #in windows command prompt
+      #in windows command prompt:
             
             #python -m venv /path/to/directory
 
@@ -73,14 +72,16 @@
             
 #1) spaCy initialization 
 
-library(spacyr)
-#spacy_initialize(model="en_core_web_sm", virtualenv = "C:\\Users\\Chris\\venv\\mar6" )
-spacy_initialize(model = "en_core_web_sm", virtualenv = '//Users//Notebook//mar7//bin://usr//local//bin://usr//bin://bin://usr//sbin://sbin')
+      #library(spacyr)
+
+      #spacy_initialize(model="en_core_web_sm", virtualenv = "C:\\Users\\Chris\\venv\\mar6" )
+      #spacy_initialize(model = "en_core_web_sm", virtualenv = '//Users//Notebook//mar7')
+
 #1.1) retrieving easyPubMed 
 
-source("PubMed_Extractor.R")
+      #source("PubMed_Extractor.R")
 
-PubMed_Search <- Abstract_Extractor("(PFAS OR Per-fluorylalkyl substances) AND (Toxicity OR Pathology OR Pathologies)",500)
+      #PubMed_Search <- Abstract_Extractor("(PFAS OR Per-fluorylalkyl substances) AND (Toxicity OR Pathology OR Pathologies)",500)
 
 #1.2) retrieving europePMI
 
@@ -89,7 +90,7 @@ PubMed_Search <- Abstract_Extractor("(PFAS OR Per-fluorylalkyl substances) AND (
 
 #2) Parsing Abstracts with Dependency Labeling
 
-Abstract_Parse <- spacy_parse(PubMed_Search$abstract, dependency = TRUE)
+#Abstract_Parse <- spacy_parse(PubMed_Search$abstract, dependency = TRUE)
 
 rm_negation <- function(Abstract_Parse){
 
