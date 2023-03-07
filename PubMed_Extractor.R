@@ -16,11 +16,11 @@ Abstract_Extractor <- function(Query_String, Sample_Thresh) {
   
   #2) XML Retrieval and Reorganizing
   sample_max <- Sample_Thresh
-  sample_max = as.integer(1500)
+ 
   
   #there is a bug with retmax = sample_max so for the time being i am letting easyPubMed auto-retmax.
   #unfortunately that limits my sample size to 500 articles but there can be workarounds
-  my_abstracts_xml <- fetch_pubmed_data(my_query)
+  my_abstracts_xml <- fetch_pubmed_data(my_query, retmax = Sample_Thresh)
   all_xml <- articles_to_list(my_abstracts_xml)
   print(paste(length(all_xml), "abstracts were retrieved. Creating output dataframe... (this may take a while)"))
   

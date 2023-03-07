@@ -1,5 +1,7 @@
 #Natural Language Processing Study 1 (Negation modifier removal)
 
+#this document is its own standalone MWE
+
 #Dependencies: tidyverse, textdata, spacyr, dplyr, quanteda 
 
 #I) python virtual environment creation
@@ -60,16 +62,18 @@ PubMed_Search <- Abstract_Extractor("(PFAS OR Per-fluorylalkyl substances) AND (
 
 Abstract_Parse <- spacy_parse(PubMed_Search$abstract, dependency = TRUE)
 
+rm_negation <- function(Abstract_Parse){
+
 #3) Identifying Coordinates of Negative Modifiers
 
 Copy_Abstract_Parse <- Abstract_Parse
 Negation_Coord <- which(Copy_Abstract_Parse$dep_rel == "neg")
 print(paste("there are", length(Negation_Coord), "negations in the abstracts..."))
 
-#4) Function for Identifying 
+#4) Function for Isolating Sentences Containing Negation Modifiers 
 
    master_token_list <- c()
-   
+   print(paste("retrieving negation sentences..."))
 for(neg in 1:length(Negation_Coord)){
       
       #identifying text_id and sentence_id corresponding to the negation coordinate
@@ -85,5 +89,10 @@ for(neg in 1:length(Negation_Coord)){
       token_ids <- text_id_coordinates[sentence_id_coordinates]
       
       master_token_list <- c(master_token_list, token_ids)
-      }
-
+}
+   print(paste("there are", length(master_token_list), "tokens associatied with negations in the abstracts. Removing..."))
+   #Removing Sentences Containing Negations
+   
+   Copy_Abstract_Parse <- Copy_Abstract_Parse[-master_token_list,]
+   return(Copy_Abstract_Parse)
+}
