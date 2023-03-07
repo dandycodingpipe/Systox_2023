@@ -4,6 +4,9 @@
 
 #Dependencies: tidyverse, textdata, spacyr, dplyr, quanteda 
 
+# pip install was used in both systems
+#homebrew was used to install virtualenv (mac)
+
 #I) python virtual environment creation
     
       #in windows command prompt
@@ -13,6 +16,9 @@
             #python -m venv \Users\Chris\venv\mar6 (remember to remove your venv when you are done)
       
       #in mac terminal
+
+            # $ virtualenv path/to/venv
+            # $ virtualenv venv
 
 #II) virtual environment activation
             
@@ -25,28 +31,51 @@
       #you should see (your_env) on the left side of the screen 
 
       #for Mac:
+            
+            # $ source path/to/venv/bin/activate
+            # $ source venv/bin/activate
 
 #III) virtual environment installation of dependencies (spaCy, language model)
       
       #Windows:
             #In command prompt:
+                  
                   #pip install spacy
                   
                   #spacy language model download
                   
                   #python -m spacy download en_core_web or en_core_trf (if possible) --- other language models can be found in https://spacy.io/usage/models
                   
+      #Mac:
+            #In terminal
+            
+                  # pip install -U pip setuptools wheel
+                  # pip install -U spacy
+                  
+                  #python -m spacy download language_model_of_choice
+
 #IV) virtual environment removal (keeps your computer free of mess and can always be re-installed)
       #Windows:
-            #rm /path/to/directory
+            # rm /path/to/directory
 
-            #rm \Users\Chris\venv\mar6 
+            # rm \Users\Chris\venv\mar6 
+
+      #Mac:
+            
+            #deactivation:
+            # $ deactivate
+            
+            #directory removal:
+            # $ rm -rf directory
+            # $ rm -rf venv
+            
+            
             
 #1) spaCy initialization 
 
 library(spacyr)
-spacy_initialize(model="en_core_web_sm", virtualenv = "C:\\Users\\Chris\\venv\\mar6" )
-
+#spacy_initialize(model="en_core_web_sm", virtualenv = "C:\\Users\\Chris\\venv\\mar6" )
+spacy_initialize(model = "en_core_web_sm", virtualenv = '//Users//Notebook//mar7//bin://usr//local//bin://usr//bin://bin://usr//sbin://sbin')
 #1.1) retrieving easyPubMed 
 
 source("PubMed_Extractor.R")
