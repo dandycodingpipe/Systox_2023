@@ -1,9 +1,26 @@
 #dependencies
 library(easyPubMed)
+library(europepmc)
 library(dplyr)
 library(kableExtra)
 
+europe_search <- epmc_search("PFAS", output = 'raw', limit = 20000)
+length(which(europe_search[["source"]] == 'MED'))
+
+europe_search[[1]][["abstractText"]]
+europe_search[[1]][["source"]]
+counter <- 0
+for(i in 1:length(europe_search)){
+      if(europe_search[[i]][["source"]]== 'PMC'){
+            print(i)
+            counter <- counter +1
+      }
+}
+check <- epmc_details(ext_id = '31485522', data_src = 'pmc')
 #function
+
+check2 <- get_pubmed_ids('6-2 FTS')
+print(check2$Count)
 Abstract_Extractor <- function(Query_String, Sample_Thresh) {
   
   t.start <- Sys.time()
