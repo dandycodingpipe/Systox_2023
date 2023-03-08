@@ -12,14 +12,14 @@ source("Apriori_ARM_tool.R")
 
 # Step 1: Corpus Retrieval and Extraction
 #myQuery <- "((complement system pathway) OR (complement system proteins)) AND (pathology OR pathologies) AND 1980:2023[dp]"
-#AdriensQuery <- "synthetic biological intelligence"
-
-myQuery <- "(PFAS toxicity OR PFAS toxicology) AND (disease OR pathology OR pathologies)"
-raw_pub_info <- Abstract_Extractor(myQuery,1500)
+myQuery <- "6-2 FTS OR 6-2 fluorotelomer sulfonate OR fluorotelomer sulfonate"
+raw_pub_info <- Abstract_Extractor(myQuery,1000)
 
 #Step 2: Natural Language Processing
-parsed_abstracts <- Text_Parser(raw_pub_info, venv_path = "C:\\Users\\Chris\\.virtualenvs\\Python-FsgYzr6a", 
+parsed_abstracts <- Text_Parser(raw_pub_info, venv_path = "//Chris//Notebook//mar7", 
             lang_model = "en_core_web_sm", 0.2)
+
+#spacy_initialize(model="en_core_web_sm", virtualenv = "C:\\Users\\Chris\\venv\\mar6" )
 
 #Step 3: Mining Association Rules (this includes statistical filtering)
 rules <- ARM(parsed_abstracts, min_supp = 0.01, min_conf = 0.5, min_p = 0.005)
@@ -39,12 +39,12 @@ write.csv(df_rules, file = "sig_rules.csv")
 
 plot(freq, method = 'graph', measure = 'n', shading = 'n')
 
-<<<<<<< HEAD
-wordsearch <- rules[which(rules$RHS == "{datum}"),]
-=======
+
+wordsearch <- rules[which(rules$RHS == "{chromatography}"),]
+
 #wordsearcher fxn
 wordsearch <- rules[which(rules$RHS == "{glomerulonephritis}"),]
->>>>>>> 4a2d1b627aceb4846086b02cc5230d488cb5b6d1
+
 
 
 #visualisation
