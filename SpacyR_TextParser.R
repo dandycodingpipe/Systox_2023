@@ -10,9 +10,15 @@ library(tidyverse)
 
 Abstract_Trimmer <- function(raw_data, fraction){
   
-
   NAs <- which(is.na(raw_data$abstract))
-  raw_data <- raw_data[-NAs,]
+  
+  #for whatever reason there is a glitch that removes every datum if no NAs are present
+  if(is_empty(NAs)==TRUE){
+        print('No corrupted abstracts in retrieval...')
+  }else{
+        raw_data <- raw_data[-NAs,]
+  }
+  
       
   for(i in 1:length(raw_data$abstract)){
       #reduced search

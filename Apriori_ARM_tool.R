@@ -8,7 +8,7 @@ ARM <- function(data, min_supp, min_conf, min_p ){
   txns <- as(split(data$lemma, data$doc_id), "transactions")
   
   print("Initiating apriori algorithm...")
-  rules <- apriori(txns, parameter = list(supp = min_supp, conf = min_conf, target = 'rules'))
+  rules <- apriori(txns, parameter = list(supp = min_supp, conf = min_conf, target = 'rules'), control = list(memopt = TRUE))
   
   #statistical filtering
   print("Removing rules that do not meet p-value thresholds and type-1 errors...")
