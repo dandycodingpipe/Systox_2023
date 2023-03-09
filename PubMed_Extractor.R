@@ -10,6 +10,7 @@ length(which(europe_search[["source"]] == 'MED'))
 europe_search[[1]][["abstractText"]]
 europe_search[[1]][["source"]]
 counter <- 0
+
 for(i in 1:length(europe_search)){
       if(europe_search[[i]][["source"]]== 'PMC'){
             print(i)
