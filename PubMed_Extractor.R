@@ -4,20 +4,63 @@ library(europepmc)
 library(dplyr)
 library(kableExtra)
 
-europe_search <- epmc_search("PFAS", output = 'raw', limit = 20000)
-length(which(europe_search[["source"]] == 'MED'))
+europe_search <- epmc_search("(PFAS OR Perfluoro alkyl substances)", output = 'raw', limit = 20000)
+library(tidyverse)
+#extremely deep and advanced process here
+dfr <- purrr::keep(europe_search, function(x) (x[['source']] == 'PMC') && !is.null(x[['abstractText']])) %>%
+      map_dfr(~.x)
+dfr1_1 <- unique(dfr$abstractText)
+dfr2 <- purrr::keep(europe_search, function(x) (x[['source']] == 'MED') && !is.null(x[['abstractText']])) %>%
+      map_dfr(~.x)
 
-europe_search[[1]][["abstractText"]]
-europe_search[[1]][["source"]]
+purrr::keep()
+#PMC strict search
+print('A strict PMC search will 5x longer than a non-PMC search. Initiating...')
+
+PMC_coords <- c()
 counter <- 0
 
-for(i in 1:length(europe_search)){
-      if(europe_search[[i]][["source"]]== 'PMC'){
-            print(i)
+for(i in 1:length(europe_search)) {
+      
+      if(europe_search[[i]][["source"]] == "PMC") {
+            PMC_coords <- c(PMC_coords,i)
+            print( europe_search[[i]][["pmcid"]] )
+            
             counter <- counter +1
       }
 }
-check <- epmc_details(ext_id = '31485522', data_src = 'pmc')
+
+
+article_to_df_epmc <- function(PMC_coords) {
+      
+      row <- data.frame()
+      
+      #PMCID
+      row <- c(row,cbind(europe_search[[PMC_coords]][["pmcid"]]))
+      #Title
+      #row <- c(row,cbind(europe_search[[PMC_coords]][["title"]]))
+      #abstractText
+      row <- c(row,cbind(europe_search[[PMC_coords]][["abstractText"]]))
+      #pubYear
+      #row <- c(row,cbind(europe_search[[PMC_coords]][["pubYear"]]))
+      
+      #creating row
+      if(is.null(europe_search[[PMC_coords]][["abstractText"]]) == TRUE){
+            
+      } else {
+            return(row) 
+      }
+}
+
+row <- lapply(PMC_coords,article_to_df_epmc)
+Nulls <- c()
+for(i in 1:length(row)){
+      if(is.null(row[i])==TRUE){
+            nonNulls <- c(nonNulls,i)
+      }
+}
+
+row <- list2DF(row)
 #function
 
 check2 <- get_pubmed_ids('6-2 FTS')

@@ -22,7 +22,7 @@ parsed_abstracts <- Text_Parser(raw_pub_info, venv_path = "C:\\Users\\Chris\\ven
 #spacy_initialize(model="en_core_web_sm", virtualenv = "//Chris//Notebook//mar7" )
 
 #Step 3: Mining Association Rules (this includes statistical filtering)
-rules <- ARM(parsed_abstracts, min_supp = 0.01, min_conf = 0.5, min_p = 0.005)
+rules <- ARM(parsed_abstracts, min_supp = 0.05, min_conf = 0.5, min_p = 0.005)
 
 #thematic filtering
 
