@@ -13,7 +13,7 @@ source("Apriori_ARM_tool.R")
 # Step 1: Corpus Retrieval and Extraction
 #myQuery <- "((complement system pathway) OR (complement system proteins)) AND (pathology OR pathologies) AND 1980:2023[dp]"
 myQuery <- "(dry scalp OR dandruff) AND (psoriasis OR treatment)"
-raw_pub_info <- info_retrieval(myQuery, 1000, "pmc")
+raw_pub_info <- info_retrieval(myQuery, 1000, "pubmed")
 
 #Step 2: Natural Language Processing
 parsed_abstracts <- Text_Parser(raw_pub_info, venv_path = "/Users/Notebook/mar7", 
@@ -22,7 +22,7 @@ parsed_abstracts <- Text_Parser(raw_pub_info, venv_path = "/Users/Notebook/mar7"
 #spacy_initialize(model="en_core_web_sm", virtualenv = "C:\\Users\\Chris\\venv\\mar6" )
 
 #Step 3: Mining Association Rules (this includes statistical filtering)
-rules <- ARM(parsed_abstracts, min_supp = 0.01, min_conf = 0.75, min_p = 0.005)
+rules <- ARM(parsed_abstracts, min_supp = 0.1, min_conf = 0.75, min_p = 0.005)
 
 #thematic filtering
 
@@ -34,13 +34,14 @@ rules <- ARM(parsed_abstracts, min_supp = 0.01, min_conf = 0.75, min_p = 0.005)
 
 filt_rules <- which(rules$lift <= 2)
 rules <- rules[-filt_rules,]
-write.csv(df_rules, file = "sig_rules.csv")
+write.csv(rules, file = "sig_rules.csv")
 
 
 plot(freq, method = 'graph', measure = 'n', shading = 'n')
 
 
-wordsearch <- rules[which(rules$RHS == "{chromatography}"),]
+wordsearch <- rules[which(rules$RHS == "{improvement}"),]
+lhs_search <- rules[which(rules$LHS == "{symptom,dandruff, satisfaction}"),]
 
 #wordsearcher fxn
 wordsearch <- rules[which(rules$RHS == "{glomerulonephritis}"),]
@@ -59,7 +60,7 @@ short_dataframe2 = head(freq, 20)
 
 ggplot(short_dataframe2, aes(x = RHS, y = n, fill = RHS)) + geom_col() 
 
-ggplot(freq[2:11,] ,aes(x = RHS, y = n, fill = RHS)) + geom_col()
+ggplot(freq[1:12,] ,aes(x = RHS, y = n, fill = RHS)) + geom_col() + ggtitle(myQuery)
 
 removal_words <- short_dataframe2$RHS[1:7]
 
