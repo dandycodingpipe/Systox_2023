@@ -6,7 +6,7 @@ ARM <- function(data, min_supp, min_conf, min_p ){
   #rule generation
   print("Converting pasrsed abstracts into item/transaction format...")
   txns <- as(split(data$lemma, data$doc_id), "transactions")
-  
+  print("done")
   print("Initiating apriori algorithm...")
   rules <- apriori(txns, parameter = list(supp = min_supp, conf = min_conf, target = 'rules'), control = list(memopt = TRUE))
   
