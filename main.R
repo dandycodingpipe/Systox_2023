@@ -7,22 +7,22 @@ library(arulesViz)
 
 
 source("Information_Retrieval.R")
-source("SpacyR_TextParser.R")
+source("NLP.R")
 source("Apriori_ARM_tool.R")
 
 # Step 1: Corpus Retrieval and Extraction
 #myQuery <- "((complement system pathway) OR (complement system proteins)) AND (pathology OR pathologies) AND 1980:2023[dp]"
-myQuery <- "6-2 FTS OR 6-2 fluorotelomer sulfonate OR fluorotelomer sulfonate"
+myQuery <- "(dry scalp OR dandruff) AND (psoriasis OR treatment)"
 raw_pub_info <- info_retrieval(myQuery, 1000, "pmc")
 
 #Step 2: Natural Language Processing
-parsed_abstracts <- Text_Parser(raw_pub_info, venv_path = "C:\\Users\\Chris\\venv\\mar6", 
+parsed_abstracts <- Text_Parser(raw_pub_info, venv_path = "/Users/Notebook/mar7", 
             lang_model = "en_core_web_sm", 0.2)
 
-#spacy_initialize(model="en_core_web_sm", virtualenv = "//Chris//Notebook//mar7" )
+#spacy_initialize(model="en_core_web_sm", virtualenv = "C:\\Users\\Chris\\venv\\mar6" )
 
 #Step 3: Mining Association Rules (this includes statistical filtering)
-rules <- ARM(parsed_abstracts, min_supp = 0.01, min_conf = 0.5, min_p = 0.005)
+rules <- ARM(parsed_abstracts, min_supp = 0.01, min_conf = 0.75, min_p = 0.005)
 
 #thematic filtering
 

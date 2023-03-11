@@ -2,7 +2,6 @@
 
 # dependencies:
 
-      library(spacyr)
       library(tidyverse)
 
 #1) reducing text size
@@ -32,6 +31,7 @@
 #2) one-and-done parser
       Text_Parser <- function(data, venv_path, lang_model, reduced_search){
             
+            library(spacyr)
             #applying step #1
             Abstract_Trimmer(data, reduced_search)
             print(paste("1) search Reduction. removing",reduced_search*100,"% of abstract head..."))
@@ -63,7 +63,6 @@
       }
       
 #3) negation removal function
-      
       rm_negation <- function(Abstract_Parse){
             
             #3) Identifying Coordinates of Negative Modifiers

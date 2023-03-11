@@ -9,14 +9,16 @@
 
       #attributes:
             
-            #query <- "PFAS OR Perfluoro-alkyl substances"
+            #query <- "Your PubMed or PMC query here"
             #how_many_articles <- 500
-            #database <- "pmc"
+            #database <- "pmc" or "pubmed"
             
       #test 
             #giveArticles <- info_retrieval(query,how_many_articles,database)
             
 info_retrieval <- function(query, how_many_articles, database) {    
+      
+      how_many_articles <- how_many_articles
       
       if(database == "pubmed") {
       
@@ -61,6 +63,7 @@ pubmed_retrieval <- function(query, retmax) {
       stringToDF <- do.call(rbind,lapply(xmlToString, article_to_df, max_chars = -1, getAuthors = FALSE))
       return(stringToDF)
 }
+
 # pmc search and retrieve function
 europepmc_retrieval <- function(query, retmax) {
       
@@ -77,7 +80,7 @@ europepmc_retrieval <- function(query, retmax) {
             how_many_articles = how_many_articles*25
             
             #1 PMID/PMC Retrieval
-            europe_search <- epmc_search(query, output = 'raw', limit = how_many_articles)
+            europe_search <- epmc_search(query, output = 'raw', limit = retmax)
             
             #2 PMC or MEDLINE Retrieval
             retrieved_info <- keep(europe_search, function(x) (x[['source']] == 'PMC') && !is.null(x[['abstractText']])) %>%
@@ -85,7 +88,7 @@ europepmc_retrieval <- function(query, retmax) {
       } else if(strictPMC == 'N') {
             
             #1 PMID/PMC Retrieval
-            europe_search <- epmc_search(query, output = 'raw', limit = how_many_articles)
+            europe_search <- epmc_search(query, output = 'raw', limit = retmax)
             
             #2 PMC or MEDLINE Retrieval
             retrieved_info <- keep(europe_search, function(x) (x[['source']] == 'MED') && !is.null(x[['abstractText']])) %>%
