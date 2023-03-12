@@ -94,6 +94,10 @@ for(i in 1:length(word_list)){
       query_pull<- c(query_pull, tokenID_from_rdf$results$bindings$d$value[1])
       
       RDF_ID <-substr(raw_link,28,nchar(raw_link))
+
+#this should not have an ID for no-return classifications it can help trouble shoot
+print(paste(RDF_ID))
+
       #make a list of RDF_IDs that correspond to each rule
       #RDF_ID <- "D005138"
 #apply to lower, 
