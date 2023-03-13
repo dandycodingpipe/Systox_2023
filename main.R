@@ -7,13 +7,14 @@ library(arulesViz)
 
 
 source("Information_Retrieval.R")
-source("SpacyR_TextParser.R")
+source("NLP.R")
 source("Apriori_ARM_tool.R")
 
 # Step 1: Corpus Retrieval and Extraction
 #myQuery <- "((complement system pathway) OR (complement system proteins)) AND (pathology OR pathologies) AND 1980:2023[dp]"
-myQuery <- "6-2 FTS OR 6-2 fluorotelomer sulfonate OR fluorotelomer sulfonate"
-raw_pub_info <- info_retrieval(myQuery, 1000, "pmc")
+#myQuery <- "hip dysplasia AND (Canis familiaris OR canis lupus familiaris OR dog OR canine)"
+myQuery <- "DNA polymerase AND (damage or repair)"
+raw_pub_info <- info_retrieval(myQuery, 1000, "pubmed")
 
 #Step 2: Natural Language Processing
 parsed_abstracts <- Text_Parser(raw_pub_info, venv_path = "C:\\Users\\Chris\\venv\\mar6", 
@@ -55,13 +56,14 @@ wordsearch <- rules[which(rules$RHS == "{glomerulonephritis}"),]
 
 #i want a medical disease prognosis condition guideline proposal
 freq = rules %>% count(RHS) %>% arrange(desc(n))
-short_dataframe2 = head(freq, 20)
+short_dataframe2 = head(freq, 25)
 
-ggplot(short_dataframe2, aes(x = RHS, y = n, fill = RHS)) + geom_col() 
+ggplot(short_dataframe2[10:25,], aes(x = RHS, y = n, fill = RHS)) + geom_col() 
 
 ggplot(freq[2:11,] ,aes(x = RHS, y = n, fill = RHS)) + geom_col()
 
 removal_words <- short_dataframe2$RHS[1:7]
+ggplot(removal_words, aes(x = RHS, y = n, fill = RHS)) + geom_col()
 
 for(i in 1:7){
   data_post <- data_post[-which(data_post$RHS == removal_words[i]),]
